@@ -9,8 +9,7 @@
 
 -export([get/3,
          post/3,
-         put/3,
-         delete/2
+         delete/3
         ]).
 
 -type query() :: list({unicode:chardata(), unicode:chardata()}).
@@ -32,23 +31,16 @@ post(Path, Headers, Body) ->
             {request_uri(Path),
              Headers ++ request_headers(),
              "application/x-www-form-urlencoded",
-             uri_string:compose_query(Body)
+             encode_form_body(Body)
             }).
 
--spec put(httpc:path(), httpc:headers(), jsx:json_term()) -> response().
-put(Path, Headers, Body) ->
-    request(put,
+-spec delete(httpc:path(), httpc:headers(), jsx:json_term()) -> response().
+delete(Path, Headers, Body) ->
+    request(delete,
             {request_uri(Path),
              Headers ++ request_headers(),
              "application/x-www-form-urlencoded",
-             uri_string:compose_query(Body)
-            }).
-
--spec delete(httpc:path(), httpc:headers()) -> response().
-delete(Path, Headers) ->
-    request(delete, 
-            {request_uri(Path),
-             Headers ++ request_headers()
+             encode_form_body(Body)
             }).
 
 
@@ -129,3 +121,36 @@ ssl_options() ->
     [{verify, verify_peer},
      {cacertfile, code:priv_dir(stripe) ++ "/ca-certificates.crt"}
     ].
+
+encode_form_body(Body) ->
+    uri_string:compose_query(
+      lists:filtermap(
+        fun({K,V}) ->
+                case V of
+                    undefined -> false;
+                    _ -> {true, {K, encode_form_value(V)}}
+                end
+        end, Body)).
+
+encode_form_value(Value) when is_list(Value) -> Value;
+encode_form_value(Value) when is_binary(Value) -> binary_to_list(Value);
+encode_form_value(Value) when is_integer(Value) -> integer_to_list(Value);
+encode_form_value(Value) when is_float(Value) -> io_lib:format("~.2f",[Value]);
+encode_form_value(Value) when is_atom(Value) -> atom_to_list(Value).
+
+
+-ifdef(TEST).
+-include_lib("eunit/include/eunit.hrl").
+
+encode_form_body_test() ->
+    ?assertEqual([], encode_form_body([])),
+    ?assertEqual("string=string&binary=binary&integer=42&float=3.14&atom=true",
+                 encode_form_body([{"string", "string"},
+                                   {"binary", <<"binary">>},
+                                   {"integer", 42},
+                                   {"float", 3.1415},
+                                   {"atom", true},
+                                   {"undefined", undefined}
+                                  ])).
+
+-endif.

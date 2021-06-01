@@ -1,6 +1,12 @@
 -module(stripe_account).
 
--export([create/1, create/2, retrieve/1, update/2, delete/1, reject/2, list/0, list/1]).
+-export([create/1, create/2,
+         retrieve/1,
+         update/2,
+         delete/1,
+         reject/2,
+         list/0, list/1
+        ]).
 -export([create_link/4, create_link/5]).
 
 -define(RESOURCE_NAME, "accounts").
@@ -40,7 +46,7 @@ update(Id, Options) when is_binary(Id), is_list(Options) ->
 %% @doc Delete an account
 -spec delete(id()) -> ok.
 delete(Id) when is_binary(Id) ->
-    {200,_,_} = stripe_client:delete({?RESOURCE_NAME, Id}, []),
+    {200,_,_} = stripe_client:delete({?RESOURCE_NAME, Id}, [], []),
     ok.
 
 %% @doc Reject an account
@@ -50,7 +56,8 @@ reject(Id, Reason) when is_binary(Id),
                         Reason =:= terms_of_service orelse
                         Reason =:= other ->
     Body = [{"reason", atom_to_list(Reason)}],
-    {200,_,Account} = stripe_client:post({?RESOURCE_NAME, Id, "reject"}, [], Body),
+    {200,_,Account} =
+        stripe_client:post({?RESOURCE_NAME, Id, "reject"}, [], Body),
     {ok, Account}.
 
 %% @doc List all connected accounts
@@ -60,8 +67,9 @@ list() ->
 
 %% @doc List all connected accounts
 -spec list(options()) -> {ok, list(account())}.
-list(Options) when is_list(Options) ->
-    {200,_,#{<<"data">>:=Accounts}} = stripe_client:get(?RESOURCE_NAME, [], Options),
+list(Options) ->
+    {200,_,#{<<"data">>:=Accounts}} =
+        stripe_client:get(?RESOURCE_NAME, Options, []),
     {ok, Accounts}.
 
 %% @doc Create an account link
@@ -73,20 +81,23 @@ create_link(Account, RefreshUrl, ReturnUrl, Type) ->
                   account_onboarding | account_update,
                   currently_due | eventually_due) ->
           {ok, binary()}.
-create_link(#{<<"id">>:=Id}, RefreshUrl, ReturnUrl, Type, Collect) ->
+create_link(#{<<"id">>:=Id,<<"object">>:=<<"account">>},
+            RefreshUrl, ReturnUrl, Type, Collect) ->
     create_link(Id, RefreshUrl, ReturnUrl, Type, Collect);
-create_link(Account, RefreshUrl, ReturnUrl, Type, Collect) when is_binary(Account),
-                                                                is_list(RefreshUrl) orelse is_binary(RefreshUrl),
-                                                                is_list(ReturnUrl) orelse is_binary(ReturnUrl),
-                                                                Type =:= account_onboarding orelse
-                                                                Type =:= account_update,
-                                                                Collect =:= currently_due orelse
-                                                                Collect =:= eventually_due ->
+create_link(Account, RefreshUrl, ReturnUrl, Type, Collect)
+  when is_binary(Account),
+       is_list(RefreshUrl) orelse is_binary(RefreshUrl),
+       is_list(ReturnUrl) orelse is_binary(ReturnUrl),
+       Type =:= account_onboarding orelse
+       Type =:= account_update,
+       Collect =:= currently_due orelse
+       Collect =:= eventually_due ->
     {200,_,#{<<"url">>:=Url}} =
-        stripe_client:post("account_links", [], [{"account", Account},
-                                                 {"refresh_url", RefreshUrl},
-                                                 {"return_url", ReturnUrl},
-                                                 {"type", atom_to_list(Type)},
-                                                 {"collect", atom_to_list(Collect)}
-                                                ]),
+        stripe_client:post("account_links", [],
+                           [{"account", Account},
+                            {"refresh_url", RefreshUrl},
+                            {"return_url", ReturnUrl},
+                            {"type", atom_to_list(Type)},
+                            {"collect", atom_to_list(Collect)}
+                           ]),
     {ok, Url}.

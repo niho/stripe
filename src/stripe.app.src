@@ -6,10 +6,21 @@
    [kernel,
     stdlib,
     inets,
+    crypto,
     jsx
    ]},
   {env,[]},
-  {modules, []},
+  {modules, [stripe,
+             stripe_account,
+             stripe_checkout,
+             stripe_client,
+             stripe_customer,
+             stripe_event,
+             stripe_payment,
+             stripe_product,
+             stripe_subscription,
+             stripe_webhook
+            ]},
 
   {licenses, ["Apache 2.0"]},
   {links, []}
