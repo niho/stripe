@@ -22,14 +22,14 @@
 get(Path, Query, Headers) ->
     request(get,
             {request_uri(Path, Query),
-             Headers ++ request_headers()
+             encode_headers(Headers) ++ request_headers()
             }).
 
 -spec post(httpc:path(), httpc:headers(), jsx:json_term()) -> response().
 post(Path, Headers, Body) ->
     request(post,
             {request_uri(Path),
-             Headers ++ request_headers(),
+             encode_headers(Headers) ++ request_headers(),
              "application/x-www-form-urlencoded",
              encode_form_body(Body)
             }).
@@ -38,7 +38,7 @@ post(Path, Headers, Body) ->
 delete(Path, Headers, Body) ->
     request(delete,
             {request_uri(Path),
-             Headers ++ request_headers(),
+             encode_headers(Headers) ++ request_headers(),
              "application/x-www-form-urlencoded",
              encode_form_body(Body)
             }).
@@ -104,7 +104,7 @@ handle_response(Status, ResponseHeaders, ResponseBody) ->
         "application/json" ->
             {Status,ResponseHeaders,jsx:decode(iolist_to_binary(ResponseBody))};
         _ ->
-            {Status,ResponseHeaders,ResponseBody}
+            {Status,ResponseHeaders,jsx:decode(iolist_to_binary(ResponseBody))}
     end.
 
 content_type(Headers) ->
@@ -138,6 +138,15 @@ encode_form_value(Value) when is_integer(Value) -> integer_to_list(Value);
 encode_form_value(Value) when is_float(Value) -> io_lib:format("~.2f",[Value]);
 encode_form_value(Value) when is_atom(Value) -> atom_to_list(Value).
 
+encode_headers(Headers) ->
+    lists:filtermap(
+        fun({K,V}) ->
+                case V of
+                    undefined -> false;
+                    _ -> {true, {K, encode_form_value(V)}}
+                end
+        end, Headers).
+
 
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
@@ -152,5 +161,21 @@ encode_form_body_test() ->
                                    {"atom", true},
                                    {"undefined", undefined}
                                   ])).
+
+encode_headers_test() ->
+    ?assertEqual([], encode_headers([])),
+    ?assertEqual([{"string","string"},
+                  {"binary","binary"},
+                  {"integer","42"},
+                  {"float","3.14"},
+                  {"atom","true"}
+                 ],
+                 encode_headers([{"string", "string"},
+                                 {"binary", <<"binary">>},
+                                 {"integer", 42},
+                                 {"float", 3.1415},
+                                 {"atom", true},
+                                 {"undefined", undefined}
+                                ])).
 
 -endif.

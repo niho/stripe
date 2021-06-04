@@ -27,6 +27,20 @@
 
 -define(DEFAULT_TOLERANCE, 300).
 -define(EXPECTED_SCHEME, "v1").
+-define(IP_WHITELIST,
+        [{3,18,12,63},
+         {3,130,192,231},
+         {13,235,14,237},
+         {13,235,122,149},
+         {35,154,171,200},
+         {52,15,183,38},
+         {54,187,174,169},
+         {54,187,205,235},
+         {54,187,216,72},
+         {54,241,31,99},
+         {54,241,31,102},
+         {54,241,34,107}
+        ]).
 
 -type event() :: {binary(), binary(), map()} |
                  {binary(), map()} |
@@ -35,22 +49,27 @@
 -callback handle_event(Event :: event(), State :: any()) -> ok.
 
 upgrade(Req, Env, Handler, HandlerState, _Opts) ->
-	upgrade(Req, Env, Handler, HandlerState).
+    upgrade(Req, Env, Handler, HandlerState).
 
-upgrade(Req0=#{method:=<<"POST">>}, Env, Handler, HandlerState0) ->
-    {ok, Payload, Req1} = cowboy_req:read_body(Req0),
-    StripeSignature = cowboy_req:header(<<"stripe-signature">>, Req1),
-    case verify_signature(StripeSignature, Payload, webhook_secret()) of
+upgrade(Req0=#{method:=<<"POST">>,peer:=Ip}, Env, Handler, HandlerState0) ->
+    case lists:member(Ip, ?IP_WHITELIST) of
         true ->
-            Event = decode_event(jsx:decode(Payload)),
-            case Handler:handle_event(Event, HandlerState0) of
-                ok ->
-                    {ok, cowboy_req:reply(204, Req1), Env};
-                {ok, _State} ->
-                    {ok, cowboy_req:reply(204, Req1), Env}
+            {ok, Payload, Req1} = cowboy_req:read_body(Req0),
+            StripeSignature = cowboy_req:header(<<"stripe-signature">>, Req1),
+            case verify_signature(StripeSignature, Payload, webhook_secret()) of
+                true ->
+                    Event = decode_event(jsx:decode(Payload)),
+                    case Handler:handle_event(Event, HandlerState0) of
+                        ok ->
+                            {ok, cowboy_req:reply(204, Req1), Env};
+                        {ok, _State} ->
+                            {ok, cowboy_req:reply(204, Req1), Env}
+                    end;
+                false ->
+                    {ok, cowboy_req:reply(403, Req1), Env}
             end;
         false ->
-            {ok, cowboy_req:reply(403, Req1), Env}
+            {ok, cowboy_req:reply(403, Req0), Env}
     end;
 upgrade(Req, Env, _Handler, _HandlerState) ->
     {ok, cowboy_req:reply(405, Req), Env}.
