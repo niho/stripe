@@ -28,7 +28,8 @@
 -define(DEFAULT_TOLERANCE, 300).
 -define(EXPECTED_SCHEME, "v1").
 -define(IP_WHITELIST,
-        [{3,18,12,63},
+        [{127,0,0,1}, %% <- Allowed for testing
+         {3,18,12,63},
          {3,130,192,231},
          {13,235,14,237},
          {13,235,122,149},
@@ -51,7 +52,7 @@
 upgrade(Req, Env, Handler, HandlerState, _Opts) ->
     upgrade(Req, Env, Handler, HandlerState).
 
-upgrade(Req0=#{method:=<<"POST">>,peer:=Ip}, Env, Handler, HandlerState0) ->
+upgrade(Req0=#{method:=<<"POST">>,peer:={Ip,_}}, Env, Handler, HandlerState0) ->
     case lists:member(Ip, ?IP_WHITELIST) of
         true ->
             {ok, Payload, Req1} = cowboy_req:read_body(Req0),

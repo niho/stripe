@@ -133,7 +133,7 @@ encode_form_body(Body) ->
         end, Body)).
 
 encode_form_value(Value) when is_list(Value) -> Value;
-encode_form_value(Value) when is_binary(Value) -> binary_to_list(Value);
+encode_form_value(Value) when is_binary(Value) -> unicode:characters_to_list(Value, utf8);
 encode_form_value(Value) when is_integer(Value) -> integer_to_list(Value);
 encode_form_value(Value) when is_float(Value) -> io_lib:format("~.2f",[Value]);
 encode_form_value(Value) when is_atom(Value) -> atom_to_list(Value).
