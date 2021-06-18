@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Module stripe_payment</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module stripe_payment</h1>
+<ul class="index"><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
+
+
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#cancel-2">cancel/2</a></td><td>Cancel a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#cancel-3">cancel/3</a></td><td>Cancel a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#capture-2">capture/2</a></td><td>Capture a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#capture-3">capture/3</a></td><td>Capture a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#client_secret-1">client_secret/1</a></td><td>Get the client secret from a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#confirm-2">confirm/2</a></td><td>Confirm a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#confirm-3">confirm/3</a></td><td>Confirm a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#create-3">create/3</a></td><td>Create a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#create-4">create/4</a></td><td>Create a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#retrieve-1">retrieve/1</a></td><td>Retrieve a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#retrieve-2">retrieve/2</a></td><td>Retrieve a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#retrieve-3">retrieve/3</a></td><td>Retrieve a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#update-2">update/2</a></td><td>Update a PaymentIntent.</td></tr>
+<tr><td valign="top"><a href="#update-3">update/3</a></td><td>Update a PaymentIntent.</td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="cancel-2">cancel/2</a></h3>
+<div class="spec">
+<p><tt>cancel(Id, Reason) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Cancel a PaymentIntent</p>
+
+<h3 class="function"><a name="cancel-3">cancel/3</a></h3>
+<div class="spec">
+<p><tt>cancel(Id, Reason, Headers) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Cancel a PaymentIntent</p>
+
+<h3 class="function"><a name="capture-2">capture/2</a></h3>
+<div class="spec">
+<p><tt>capture(Id, Options) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Capture a PaymentIntent</p>
+
+<h3 class="function"><a name="capture-3">capture/3</a></h3>
+<div class="spec">
+<p><tt>capture(Id, Options, Headers) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Capture a PaymentIntent</p>
+
+<h3 class="function"><a name="client_secret-1">client_secret/1</a></h3>
+<div class="spec">
+<p><tt>client_secret(PaymentIntent) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Get the client secret from a PaymentIntent</p>
+
+<h3 class="function"><a name="confirm-2">confirm/2</a></h3>
+<div class="spec">
+<p><tt>confirm(Id, Options) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Confirm a PaymentIntent</p>
+
+<h3 class="function"><a name="confirm-3">confirm/3</a></h3>
+<div class="spec">
+<p><tt>confirm(Id, Options, Headers) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Confirm a PaymentIntent</p>
+
+<h3 class="function"><a name="create-3">create/3</a></h3>
+<div class="spec">
+<p><tt>create(Amount, Currency, Options) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Create a PaymentIntent</p>
+
+<h3 class="function"><a name="create-4">create/4</a></h3>
+<div class="spec">
+<p><tt>create(Amount, Currency, Options, Headers) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Create a PaymentIntent</p>
+
+<h3 class="function"><a name="retrieve-1">retrieve/1</a></h3>
+<div class="spec">
+<p><tt>retrieve(Id) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Retrieve a PaymentIntent</p>
+
+<h3 class="function"><a name="retrieve-2">retrieve/2</a></h3>
+<div class="spec">
+<p><tt>retrieve(Id, ClientSecret) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Retrieve a PaymentIntent</p>
+
+<h3 class="function"><a name="retrieve-3">retrieve/3</a></h3>
+<div class="spec">
+<p><tt>retrieve(Id, ClientSecret, Headers) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Retrieve a PaymentIntent</p>
+
+<h3 class="function"><a name="update-2">update/2</a></h3>
+<div class="spec">
+<p><tt>update(Id, Options) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Update a PaymentIntent</p>
+
+<h3 class="function"><a name="update-3">update/3</a></h3>
+<div class="spec">
+<p><tt>update(Id, Options, Headers) -&gt; any()</tt></p>
+<p> </p>
+</div><p>Update a PaymentIntent</p>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc</i></p>
+</body>
+</html>

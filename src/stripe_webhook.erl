@@ -4,21 +4,23 @@
 %
 % Usage:
 %
-%  -module(stripe_webhook_handler).
-%  -behaviour(stripe_webhook).
+% ```
+% -module(stripe_webhook_handler).
+% -behaviour(stripe_webhook).
 %
-%  -export([init/2, handle_event/2]).
+% -export([init/2, handle_event/2]).
 %
-%  init(Req, State) ->
-%    {stripe_webhook, Req, State}.
+% init(Req, State) ->
+%     {stripe_webhook, Req, State}.
 %
-%  handle_event({<<"charge.succeeded">>, _EventData}, _State) ->
-%    ok;
-%  handle_event({<<"invoice.paid">>, _EventData, _Account}, _State) ->
-%    %% An event from a Connect account.
-%    ok;
-%  handle_event(_Event, _State) ->
-%    ok.
+% handle_event({<<"charge.succeeded">>, _EventData}, _State) ->
+%     ok;
+% handle_event({<<"invoice.paid">>, _EventData, _Account}, _State) ->
+%     %% An event from a Connect account.
+%     ok;
+% handle_event(_Event, _State) ->
+%     ok.
+% '''
 %
 -module(stripe_webhook).
 
