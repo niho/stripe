@@ -34,19 +34,22 @@ create(Type, Options) when Type =:= custom orelse
 %% @doc Retrieve an account
 -spec retrieve(id()) -> {ok, account()}.
 retrieve(Id) when is_binary(Id) ->
-    {200,_,Account} = stripe_client:get({?RESOURCE_NAME, Id}, [], []),
+    {200,_,Account} = stripe_client:get(
+                        lists:flatten([?RESOURCE_NAME, "/", Id]), [], []),
     {ok, Account}.
 
 %% @doc Update an account
 -spec update(id(), options()) -> {ok, account()}.
 update(Id, Options) when is_binary(Id), is_list(Options) ->
-    {200,_,Account} = stripe_client:post({?RESOURCE_NAME, Id}, [], Options),
+    {200,_,Account} = stripe_client:post(
+                        lists:flatten([?RESOURCE_NAME, "/", Id]), [], Options),
     {ok, Account}.
 
 %% @doc Delete an account
 -spec delete(id()) -> ok.
 delete(Id) when is_binary(Id) ->
-    {200,_,_} = stripe_client:delete({?RESOURCE_NAME, Id}, [], []),
+    {200,_,_} = stripe_client:delete(
+                  lists:flatten([?RESOURCE_NAME, "/", Id]), [], []),
     ok.
 
 %% @doc Reject an account
@@ -57,7 +60,8 @@ reject(Id, Reason) when is_binary(Id),
                         Reason =:= other ->
     Body = [{"reason", atom_to_list(Reason)}],
     {200,_,Account} =
-        stripe_client:post({?RESOURCE_NAME, Id, "reject"}, [], Body),
+        stripe_client:post(
+          lists:flatten([?RESOURCE_NAME, "/", Id, "/", "reject"]), [], Body),
     {ok, Account}.
 
 %% @doc List all connected accounts

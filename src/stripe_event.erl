@@ -11,7 +11,7 @@ retrieve(Id) ->
 %% @doc Retrieve an event
 retrieve(Id, Headers) ->
     {200,_,Event} =
-        stripe_client:get({"events",Id}, [], Headers),
+        stripe_client:get(lists:flatten(["events","/",Id]), [], Headers),
     {ok, Event}.
 
 %% @doc List all events

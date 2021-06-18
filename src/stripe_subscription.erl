@@ -32,7 +32,8 @@ retrieve(Id) ->
 %% @doc Retrieve a subscription
 retrieve(Id, Headers) ->
     {200,_,Subscription} =
-        stripe_client:get({"subscriptions",Id}, Headers, []),
+        stripe_client:get(
+          lists:flatten(["subscriptions","/",Id]), Headers, []),
     {ok, Subscription}.
 
 %% @doc Update a subscription
@@ -42,7 +43,8 @@ update(Id, Options) ->
 %% @doc Update a subscription
 update(Id, Options, Headers) ->
     {200,_,Subscription} =
-        stripe_client:post({"subscriptions", Id}, Headers, Options),
+        stripe_client:post(
+          lists:flatten(["subscriptions","/",Id]), Headers, Options),
     {ok, Subscription}.
 
 %% @doc Cancel a subscription
@@ -52,7 +54,8 @@ cancel(Id, Options) ->
 %% @doc Cancel a subscription
 cancel(Id, Options, Headers) ->
     {200,_,Subscription} =
-        stripe_client:delete({"subscriptions", Id}, Headers, Options),
+        stripe_client:delete(
+          lists:flatten(["subscriptions","/",Id]), Headers, Options),
     {ok, Subscription}.
 
 %% @doc List subscriptions

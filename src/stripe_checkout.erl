@@ -38,7 +38,8 @@ retrieve(Id) ->
 %% @doc Retrieve a checkout session
 retrieve(Id, Headers) ->
     {200,_,Session} =
-        stripe_client:get({"checkout/sessions",Id}, [], Headers),
+        stripe_client:get(
+          lists:flatten(["checkout/sessions","/",Id]), [], Headers),
     {ok, Session}.
 
 %% @doc List all checkout session
@@ -58,5 +59,7 @@ line_items(Id, Options) ->
 %% @doc Retrieve a checkout session's line items
 line_items(Id, Options, Headers) ->
     {200,_,#{<<"data">>:=LineItems}} =
-        stripe_client:get({"checkout/sessions",Id,"line_items"}, Options, Headers),
+        stripe_client:get(
+          lists:flatten(["checkout/sessions","/",Id,"/","line_items"]),
+                        Options, Headers),
     {ok, LineItems}.

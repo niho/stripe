@@ -27,7 +27,8 @@ retrieve(Id) ->
 %% @doc Retrieve a product
 retrieve(Id, Headers) ->
     {200,_,Product} =
-        stripe_client:get({"products",Id}, Headers, []),
+        stripe_client:get(
+          lists:flatten(["products","/",Id]), Headers, []),
     {ok, Product}.
 
 %% @doc Update a product
@@ -37,7 +38,8 @@ update(Id, Options) ->
 %% @doc Update a product
 update(Id, Options, Headers) ->
     {200,_,Product} =
-        stripe_client:post({"products", Id}, Headers, Options),
+        stripe_client:post(
+          lists:flatten(["products","/",Id]), Headers, Options),
     {ok, Product}.
 
 %% @doc Delete a product
@@ -47,7 +49,8 @@ delete(Id) ->
 %% @doc Delete a product
 delete(Id, Headers) ->
     {200,_,Product} =
-        stripe_client:delete({"products", Id}, Headers, []),
+        stripe_client:delete(
+          lists:flatten(["products","/",Id]), Headers, []),
     {ok, Product}.
 
 %% @doc List all products

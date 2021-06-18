@@ -18,12 +18,40 @@
 <h2><a name="description">Description</a></h2>Stripe HTTP client.
 <h2><a name="types">Data Types</a></h2>
 
+<h3 class="typedecl"><a name="type-body">body()</a></h3>
+<p><tt>body() = [{<a href="#type-field">field()</a>, <a href="#type-value">value()</a>}]</tt></p>
+
+
+<h3 class="typedecl"><a name="type-field">field()</a></h3>
+<p><tt>field() = string()</tt></p>
+
+
+<h3 class="typedecl"><a name="type-header">header()</a></h3>
+<p><tt>header() = {<a href="#type-field">field()</a>, <a href="#type-value">value()</a>}</tt></p>
+
+
+<h3 class="typedecl"><a name="type-headers">headers()</a></h3>
+<p><tt>headers() = [<a href="#type-header">header()</a>]</tt></p>
+
+
+<h3 class="typedecl"><a name="type-path">path()</a></h3>
+<p><tt>path() = string()</tt></p>
+
+
 <h3 class="typedecl"><a name="type-query">query()</a></h3>
 <p><tt>query() = [{<a href="/Users/niklas/jtc/ithaca/apps/stdlib/doc/unicode.html#type-chardata">unicode:chardata()</a>, <a href="/Users/niklas/jtc/ithaca/apps/stdlib/doc/unicode.html#type-chardata">unicode:chardata()</a>}]</tt></p>
 
 
 <h3 class="typedecl"><a name="type-response">response()</a></h3>
-<p><tt>response() = {<a href="/Users/niklas/jtc/ithaca/apps/inets/doc/httpc.html#type-status_code">httpc:status_code()</a>, <a href="/Users/niklas/jtc/ithaca/apps/inets/doc/httpc.html#type-headers">httpc:headers()</a>, string() | binary() | <a href="/Users/niklas/jtc/ithaca/apps/jsx/doc/jsx.html#type-json_term">jsx:json_term()</a>}</tt></p>
+<p><tt>response() = {<a href="#type-status_code">status_code()</a>, <a href="#type-headers">headers()</a>, string() | binary() | <a href="/Users/niklas/jtc/ithaca/apps/jsx/doc/jsx.html#type-json_term">jsx:json_term()</a>}</tt></p>
+
+
+<h3 class="typedecl"><a name="type-status_code">status_code()</a></h3>
+<p><tt>status_code() = integer()</tt></p>
+
+
+<h3 class="typedecl"><a name="type-value">value()</a></h3>
+<p><tt>value() = string() | binary() | integer() | float() | atom()</tt></p>
 
 
 <h2><a name="index">Function Index</a></h2>
@@ -36,19 +64,19 @@
 
 <h3 class="function"><a name="delete-3">delete/3</a></h3>
 <div class="spec">
-<p><tt>delete(Path::<a href="/Users/niklas/jtc/ithaca/apps/inets/doc/httpc.html#type-path">httpc:path()</a>, Headers::<a href="/Users/niklas/jtc/ithaca/apps/inets/doc/httpc.html#type-headers">httpc:headers()</a>, Body::<a href="/Users/niklas/jtc/ithaca/apps/jsx/doc/jsx.html#type-json_term">jsx:json_term()</a>) -&gt; <a href="#type-response">response()</a></tt><br></p>
+<p><tt>delete(Path::<a href="#type-path">path()</a>, Headers::<a href="#type-headers">headers()</a>, Body::<a href="#type-body">body()</a>) -&gt; <a href="#type-response">response()</a></tt><br></p>
 <p> </p>
 </div>
 
 <h3 class="function"><a name="get-3">get/3</a></h3>
 <div class="spec">
-<p><tt>get(Path::<a href="/Users/niklas/jtc/ithaca/apps/inets/doc/httpc.html#type-path">httpc:path()</a>, Query::<a href="#type-query">query()</a>, Headers::<a href="/Users/niklas/jtc/ithaca/apps/inets/doc/httpc.html#type-headers">httpc:headers()</a>) -&gt; <a href="#type-response">response()</a></tt><br></p>
+<p><tt>get(Path::<a href="#type-path">path()</a>, Query::<a href="#type-query">query()</a>, Headers::<a href="#type-headers">headers()</a>) -&gt; <a href="#type-response">response()</a></tt><br></p>
 <p> </p>
 </div>
 
 <h3 class="function"><a name="post-3">post/3</a></h3>
 <div class="spec">
-<p><tt>post(Path::<a href="/Users/niklas/jtc/ithaca/apps/inets/doc/httpc.html#type-path">httpc:path()</a>, Headers::<a href="/Users/niklas/jtc/ithaca/apps/inets/doc/httpc.html#type-headers">httpc:headers()</a>, Body::<a href="/Users/niklas/jtc/ithaca/apps/jsx/doc/jsx.html#type-json_term">jsx:json_term()</a>) -&gt; <a href="#type-response">response()</a></tt><br></p>
+<p><tt>post(Path::<a href="#type-path">path()</a>, Headers::<a href="#type-headers">headers()</a>, Body::<a href="#type-body">body()</a>) -&gt; <a href="#type-response">response()</a></tt><br></p>
 <p> </p>
 </div>
 <hr>

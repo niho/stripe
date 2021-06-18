@@ -12,20 +12,28 @@
          delete/3
         ]).
 
+-type path() :: string().
+-type status_code() :: integer().
+-type headers() :: [header()].
+-type header() :: {field(), value()}.
+-type field() :: string().
+-type value() :: string() | binary() | integer() | float() | atom().
+-type body() :: list({field(), value()}).
+
 -type query() :: list({unicode:chardata(), unicode:chardata()}).
--type response() :: {httpc:status_code(),
-                     httpc:headers(),
+-type response() :: {status_code(),
+                     headers(),
                      string() | binary() | jsx:json_term()
                     }.
 
--spec get(httpc:path(), query(), httpc:headers()) -> response().
+-spec get(path(), query(), headers()) -> response().
 get(Path, Query, Headers) ->
     request(get,
             {request_uri(Path, Query),
              encode_headers(Headers) ++ request_headers()
             }).
 
--spec post(httpc:path(), httpc:headers(), jsx:json_term()) -> response().
+-spec post(path(), headers(), body()) -> response().
 post(Path, Headers, Body) ->
     request(post,
             {request_uri(Path),
@@ -34,7 +42,7 @@ post(Path, Headers, Body) ->
              encode_form_body(Body)
             }).
 
--spec delete(httpc:path(), httpc:headers(), jsx:json_term()) -> response().
+-spec delete(path(), headers(), body()) -> response().
 delete(Path, Headers, Body) ->
     request(delete,
             {request_uri(Path),
@@ -48,10 +56,6 @@ delete(Path, Headers, Body) ->
 %% INTERNAL %%
 %%%%%%%%%%%%%%
 
--spec request_uri(httpc:path() |
-                  {httpc:path(), binary()} |
-                  {httpc:path(), binary(), string()}) ->
-          uri_string:uri_string().
 request_uri({Path,Id}) ->
     lists:flatten([request_uri(Path), "/", binary_to_list(Id)]);
 request_uri({Path,Id,Action}) ->
@@ -60,23 +64,19 @@ request_uri(Path) ->
     Endpoint = application:get_env(stripe, endpoint, ?ENDPOINT),
     lists:flatten([Endpoint, "/", Path]).
 
--spec request_uri(httpc:path(), query()) -> uri_string:uri_string().
 request_uri(Path, #{}) ->
     request_uri(Path);
 request_uri(Path, Query) ->
     lists:flatten([request_uri(Path), "?", uri_string:compose_query(Query)]).
 
--spec authorization_bearer(binary()) -> string().
 authorization_bearer(AccessToken) ->
     io_lib:format("Bearer ~s", [AccessToken]).
 
--spec request_headers() -> httpc:headers().
 request_headers() ->
     {ok, ApiKey} = application:get_env(stripe, api_key),
     [{"Authorization", authorization_bearer(ApiKey)}
     ].
 
--spec request(httpc:method(), httpc:request()) -> response().
 request(Method, Request) ->
     logger:debug(#{method => Method,
                    request => Request
@@ -93,8 +93,6 @@ request(Method, Request) ->
                   }),
     handle_response(Status, ResponseHeaders, ResponseBody).
 
--spec handle_response(httpc:status_code(), httpc:headers(), string() | binary()) ->
-          response().
 handle_response(Status, ResponseHeaders, []) -> {Status,ResponseHeaders,[]};
 handle_response(Status, ResponseHeaders, ResponseBody) ->
     case content_type(ResponseHeaders) of

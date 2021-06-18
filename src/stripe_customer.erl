@@ -24,7 +24,7 @@ retrieve(Id) ->
 %% @doc Retrieve a customer
 retrieve(Id, Headers) ->
     {200,_,Customer} =
-        stripe_client:get({"customers",Id}, Headers, []),
+        stripe_client:get(lists:flatten(["customers","/",Id]), Headers, []),
     {ok, Customer}.
 
 %% @doc Update a customer
@@ -34,7 +34,8 @@ update(Id, Options) ->
 %% @doc Update a customer
 update(Id, Options, Headers) ->
     {200,_,Customer} =
-        stripe_client:post({"customers", Id}, Headers, Options),
+        stripe_client:post(
+          lists:flatten(["customers","/",Id]), Headers, Options),
     {ok, Customer}.
 
 %% @doc Delete a customer
@@ -43,7 +44,8 @@ delete(Id) ->
 
 %% @doc Delete a customer
 delete(Id, Headers) ->
-    {200,_,_} = stripe_client:delete({"customers", Id}, Headers, []),
+    {200,_,_} = stripe_client:delete(
+                  lists:flatten(["customers","/",Id]), Headers, []),
     ok.
 
 %% @doc List all customers
