@@ -1,10 +1,8 @@
 % @author Niklas Holmgren <niklas.holmgren@gmail.com>
 % @copyright 2021 Niklas Holmgren
 % @doc Stripe HTTP client.
-
 -module(stripe_client).
 
--define(ENDPOINT, "https://api.stripe.com/v1").
 -define(TIMEOUT, 5000).
 
 -export([get/3,
@@ -61,8 +59,7 @@ request_uri({Path,Id}) ->
 request_uri({Path,Id,Action}) ->
     lists:flatten([request_uri(Path), "/", binary_to_list(Id), "/", Action]);
 request_uri(Path) ->
-    Endpoint = application:get_env(stripe, endpoint, ?ENDPOINT),
-    lists:flatten([Endpoint, "/", Path]).
+    lists:flatten([stripe:endpoint(), "/", Path]).
 
 request_uri(Path, #{}) ->
     request_uri(Path);
@@ -73,8 +70,8 @@ authorization_bearer(AccessToken) ->
     io_lib:format("Bearer ~s", [AccessToken]).
 
 request_headers() ->
-    {ok, ApiKey} = application:get_env(stripe, api_key),
-    [{"Authorization", authorization_bearer(ApiKey)}
+    [{"Authorization", authorization_bearer(stripe:api_key())},
+     {"Stripe-Version", stripe:api_version()}
     ].
 
 request(Method, Request) ->

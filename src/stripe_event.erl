@@ -1,3 +1,5 @@
+% @author Niklas Holmgren <niklas.holmgren@gmail.com>
+% @copyright 2021 Niklas Holmgren
 -module(stripe_event).
 
 -export([retrieve/1, retrieve/2,

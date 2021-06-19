@@ -1,3 +1,5 @@
+% @author Niklas Holmgren <niklas.holmgren@gmail.com>
+% @copyright 2021 Niklas Holmgren
 -module(stripe_product).
 
 -export([create/2, create/3,
